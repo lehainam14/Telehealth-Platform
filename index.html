@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealth Platform - Bệnh viện Đại học Y Dược TP.HCM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-brand-space"></div>
+                <div class="header-brand">
+                    <h1 class="header-title">Telehealth Platform</h1>
+                
+                </div>
+                <div class="header-actions">
+                    <a href="#notifications" class="notification-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="notification-badge"></span>
+                    </a>
+                    <!-- Login Button (shown when logged out) -->
+                    <button id="header-login-btn" class="btn btn-primary" style="display: none; padding: 8px 16px; font-size: 14px;">
+                        Đăng nhập
+                    </button>
+                    <!-- Profile Menu (shown when logged in) -->
+                    <div id="profile-section" style="display: none; position: relative;">
+                        <button id="profile-menu-btn" class="profile-btn">
+                            <div class="profile-avatar" id="profile-avatar-text"></div>
+                        </button>
+                        <!-- User Dropdown Menu -->
+                        <div id="profile-menu" class="profile-menu hidden">
+                            <a href="#profile" class="profile-menu-item">Trang cá nhân</a>
+                            <button id="edit-profile-btn" class="profile-menu-item">Chỉnh sửa thông tin</button>
+                            <hr class="profile-menu-divider">
+                            <button id="logout-btn" class="profile-menu-item logout">Đăng xuất</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="#home" class="nav-item active" data-page="home">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Trang chủ</span>
+                </a>
+                <a href="#appointments" class="nav-item" data-page="appointments">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Phiếu khám</span>
+                </a>
+                <a href="#notifications" class="nav-item" data-page="notifications">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span>Thông báo</span>
+                </a>
+                <a href="#functions" class="nav-item" data-page="functions">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Chức năng</span>
+                </a>
+                <a href="#profile" class="nav-item" data-page="profile" id="profile-nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Cá nhân</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div id="page-content"></div>
+        </main>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Đăng nhập</h2>
+                <button class="modal-close" data-modal="login-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label>Tên đăng nhập / Số điện thoại</label>
+                        <input type="text" placeholder="Nhập tên đăng nhập hoặc số điện thoại" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu</label>
+                        <input type="password" placeholder="Nhập mật khẩu" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Đăng nhập</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Chỉnh sửa thông tin</h2>
+                <button class="modal-close" data-modal="edit-profile-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-profile-form">
+                    <div class="form-group">
+                        <label>Họ và tên</label>
+                        <input type="text" id="edit-fullname" placeholder="Nhập họ và tên" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại</label>
+                        <input type="tel" id="edit-phone" placeholder="Nhập số điện thoại" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="edit-email" placeholder="Nhập email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày sinh</label>
+                        <input type="date" id="edit-dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Giới tính</label>
+                        <select id="edit-gender">
+                            <option value="">-- Chọn giới tính --</option>
+                            <option value="male">Nam</option>
+                            <option value="female">Nữ</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                        <button type="button" class="btn btn-secondary" data-modal="edit-profile-modal">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
