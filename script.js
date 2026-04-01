@@ -14,7 +14,7 @@ let currentNotifTab = 'all';
 
 // User session data
 let userSession = {
-    isLoggedIn: true,
+    isLoggedIn: false,
     username: '039****634',
     fullname: 'Nguyễn Văn A',
     phone: '0987654321',
@@ -119,6 +119,54 @@ function setupModalListeners() {
                     handleRoute();
                 }
             }
+        });
+    }
+    
+    // Sign up form
+    const signupForm = document.getElementById('signup-form');
+    if (signupForm) {
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const inputs = signupForm.querySelectorAll('input');
+            const username = inputs[0].value;
+            const phone = inputs[1].value;
+            const password = inputs[2].value;
+            const confirmPassword = inputs[3].value;
+            
+            if (username && phone && password && confirmPassword) {
+                if (password === confirmPassword) {
+                    userSession.isLoggedIn = true;
+                    userSession.username = username;
+                    userSession.phone = phone;
+                    closeModal('signup-modal');
+                    updateHeaderDisplay();
+                    setupProfileMenu();
+                    alert('Đăng ký thành công! Chào mừng bạn đến với Telehealth Platform');
+                    handleRoute();
+                } else {
+                    alert('Mật khẩu xác nhận không khớp!');
+                }
+            }
+        });
+    }
+    
+    // Switch between login and signup modals
+    const signupLink = document.getElementById('signup-link');
+    const loginLink = document.getElementById('login-link');
+    
+    if (signupLink) {
+        signupLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal('login-modal');
+            openModal('signup-modal');
+        });
+    }
+    
+    if (loginLink) {
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal('signup-modal');
+            openModal('login-modal');
         });
     }
 }
@@ -264,6 +312,14 @@ function renderHomePage() {
                 </div>
             </div>
 
+            <!-- Features -->
+            <div class="card">
+                <h3 class="card-title">Chức năng khác</h3>
+                <div class="features-grid">
+                    ${generateFeatures()}
+                </div>
+            </div>
+
             <!-- News Section -->
             <div class="card">
                 <div class="news-header">
@@ -283,14 +339,6 @@ function renderHomePage() {
                             <h4>Chương trình sinh hoạt Câu lạc bộ Người bệnh "Bảo vệ thận - Giữ gìn môi trường: chặn nguy cơ bệnh thận mạn"</h4>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Features -->
-            <div class="card">
-                <h3 class="card-title">Chức năng khác</h3>
-                <div class="features-grid">
-                    ${generateFeatures()}
                 </div>
             </div>
         </div>
@@ -764,7 +812,7 @@ function generateFeatures() {
     ];
 
     return features.map(f => `
-        <a href="#${f.path}" class="feature-item">
+        <a href="#${f.path}" class="feature-item feature-item-link" data-feature-path="${f.path}">
             <div class="feature-icon">
                 ${getIcon(f.icon, '#2563EB')}
             </div>
@@ -793,6 +841,17 @@ function getIcon(name, color) {
 }
 
 function attachEventListeners() {
+    // Feature items - require login
+    const featureItems = document.querySelectorAll('.feature-item-link');
+    featureItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            if (!userSession.isLoggedIn) {
+                e.preventDefault();
+                openModal('login-modal');
+            }
+        });
+    });
+
     // Tab buttons for appointments
     const tabBtns = document.querySelectorAll('.tab-btn[data-tab]');
     tabBtns.forEach(btn => {
