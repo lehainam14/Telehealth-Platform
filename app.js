@@ -19,13 +19,114 @@ function initTopNavActive() {
   const pageFromFile = (() => {
     if (file === "notifications.html") return "notifications";
     if (file === "home.html") return "home";
-    return "home";
+    return "";
   })();
 
   links.forEach(a => {
-    const active = a.dataset.page === pageFromFile;
+    const active = pageFromFile && a.dataset.page === pageFromFile;
     a.classList.toggle("active", active);
     a.setAttribute("aria-current", active ? "page" : "false");
+  });
+}
+
+const AUTH_STORAGE_KEY = "telehealth_current_user";
+
+function getCurrentUser() {
+  try {
+    const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function setCurrentUser(user) {
+  window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+}
+
+function clearCurrentUser() {
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+}
+
+function syncHeaderAuthLink() {
+  const authLink = document.querySelector(".ym-login");
+  if (!authLink) return;
+
+  const user = getCurrentUser();
+  if (user) {
+    authLink.textContent = "Hồ sơ";
+    authLink.href = "profile.html";
+    return;
+  }
+
+  authLink.textContent = "Đăng nhập";
+  authLink.href = "login.html";
+}
+
+function initLoginPage() {
+  const form = document.getElementById("login-form");
+  if (!form) return;
+
+  const user = getCurrentUser();
+  if (user) {
+    window.location.href = "profile.html";
+    return;
+  }
+
+  const errorEl = document.getElementById("login-error");
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("email")?.value?.trim() || "";
+    const password = document.getElementById("password")?.value || "";
+
+    if (email !== "patient@telehealth.vn" || password !== "123456") {
+      if (errorEl) {
+        errorEl.textContent = "Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.";
+        errorEl.classList.remove("hidden");
+      }
+      return;
+    }
+
+    const currentUser = {
+      fullName: "Nguyễn Minh Anh",
+      email: "patient@telehealth.vn",
+      phone: "0912 345 678",
+      birthDate: "12/07/2001"
+    };
+
+    setCurrentUser(currentUser);
+    syncHeaderAuthLink();
+    window.location.href = "profile.html";
+  });
+}
+
+function initProfilePage() {
+  const profileRoot = document.getElementById("profile-root");
+  if (!profileRoot) return;
+
+  const user = getCurrentUser();
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  const nameEl = document.getElementById("pf-name");
+  const emailEl = document.getElementById("pf-email");
+  const phoneEl = document.getElementById("pf-phone");
+  const birthEl = document.getElementById("pf-birth");
+  const logoutBtn = document.getElementById("btn-logout");
+
+  if (nameEl) nameEl.textContent = user.fullName || "Chưa cập nhật";
+  if (emailEl) emailEl.textContent = user.email || "Chưa cập nhật";
+  if (phoneEl) phoneEl.textContent = user.phone || "Chưa cập nhật";
+  if (birthEl) birthEl.textContent = user.birthDate || "Chưa cập nhật";
+
+  logoutBtn?.addEventListener("click", () => {
+    clearCurrentUser();
+    syncHeaderAuthLink();
+    window.location.href = "login.html";
   });
 }
 
@@ -142,6 +243,9 @@ function initFeaturedSliderAuto() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initTopNavActive();
+  syncHeaderAuthLink();
+  initLoginPage();
+  initProfilePage();
   initNotificationsPage();
   initFeaturedSliderAuto(); // gọi slider tự động
 });

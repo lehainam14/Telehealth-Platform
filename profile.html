@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hồ sơ cá nhân - Telehealth Platform</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="profile-page">
+  <header class="ym-header">
+    <div class="ym-top container">
+      <a class="ym-brand" href="home.html" aria-label="Trang chủ">
+        <img src="images/logo.png" alt="UMC Care" />
+        Telehealth Platform
+      </a>
+
+      <nav class="ym-nav" aria-label="Điều hướng">
+        <a class="ym-navLink" data-page="home" href="home.html">Trang chủ</a>
+        <a class="ym-navLink" data-page="notifications" href="notifications.html">Thông báo</a>
+      </nav>
+
+      <a class="ym-login" href="login.html">Đăng nhập</a>
+    </div>
+  </header>
+
+  <main class="container profile-main" id="profile-root">
+    <section class="profile-card" aria-label="Thông tin hồ sơ">
+      <div class="profile-head">
+        <div>
+          <h1 class="profile-name" id="pf-name">Người dùng</h1>
+          <p class="profile-meta" id="pf-email">email@example.com</p>
+        </div>
+        <button class="profile-btn" id="btn-logout" type="button">Đăng xuất</button>
+      </div>
+
+      <section class="profile-section">
+        <h3>Thông tin cá nhân</h3>
+        <div class="profile-list">
+          <div class="profile-row">
+            <span class="profile-key">Số điện thoại</span>
+            <span class="profile-value" id="pf-phone">Chưa cập nhật</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-key">Ngày sinh</span>
+            <span class="profile-value" id="pf-birth">Chưa cập nhật</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="profile-section">
+        <h3>Tài khoản</h3>
+        <div class="profile-list">
+          <div class="profile-row">
+            <span class="profile-key">Chỉnh sửa thông tin cá nhân</span>
+            <a class="profile-link" href="#">Xem chi tiết</a>
+          </div>
+          <div class="profile-row">
+            <span class="profile-key">Thay đổi mật khẩu</span>
+            <a class="profile-link" href="#">Mở</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="profile-section">
+        <h3>Cài đặt</h3>
+        <div class="profile-list">
+          <div class="profile-row">
+            <span class="profile-key">Nhận thông báo</span>
+            <button class="switch" type="button" aria-label="Bật thông báo"></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="profile-section">
+        <h3>Thông tin pháp lý</h3>
+        <div class="profile-list">
+          <div class="profile-row">
+            <span class="profile-key">Điều khoản dịch vụ</span>
+            <a class="profile-link" href="#">Mở</a>
+          </div>
+          <div class="profile-row">
+            <span class="profile-key">Chính sách bảo mật</span>
+            <a class="profile-link" href="#">Mở</a>
+          </div>
+          <div class="profile-row">
+            <span class="profile-key">Quy định sử dụng</span>
+            <a class="profile-link" href="#">Mở</a>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
