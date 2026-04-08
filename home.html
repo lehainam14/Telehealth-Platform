@@ -14,10 +14,21 @@
       Telehealth Platform
     </a>
 
-    <nav class="ym-nav" aria-label="Điều hướng">
-      <a class="ym-navLink" data-page="home" href="home.html">Trang chủ</a>
-      <a class="ym-navLink" data-page="notifications" href="notifications.html">Thông báo</a>
-    </nav>
+      <nav class="ym-nav" aria-label="Điều hướng">
+        <a class="ym-navLink" data-page="home" href="home.html"><i data-lucide="home"></i> Trang Chủ</a>
+        <div class="ym-navLink ym-dropdown">
+          <i data-lucide="layout-grid"></i> Chức Năng <span class="arrow">▼</span>
+          <ul class="dropdown-menu">
+            <li><a href="function/book.html"><i data-lucide="calendar-plus"></i> Đặt khám</a></li>
+            <li><a href="function/appointment.html"><i data-lucide="calendar-check"></i> Lịch sử đặt khám</a></li>
+            <li><a href="function/pay.html"><i data-lucide="credit-card"></i> Thanh toán viện phí</a></li>
+            <li><a href="function/invoice.html"><i data-lucide="file-text"></i> Hóa đơn</a></li>
+            <li><a href="function/profile.html"><i data-lucide="clipboard-list"></i> Hồ sơ sức khỏe</a></li>
+            <li><a href="function/monitoring.html"><i data-lucide="activity"></i> Theo dõi tại nhà</a></li>
+          </ul>
+        </div>
+        <a class="ym-navLink" data-page="notifications" href="notifications.html"><i data-lucide="bell"></i> Thông Báo</a>
+      </nav>
 
     <a class="ym-login" href="login.html">Đăng nhập</a>
   </div>

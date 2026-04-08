@@ -14,34 +14,21 @@
       Telehealth Platform
     </a>
 
-    <nav class="ym-nav" aria-label="Điều hướng">
-      <a class="ym-navLink" data-page="home" href="home.html">Trang chủ</a>
-      <a class="ym-navLink" data-page="notifications" href="notifications.html">Thông báo</a>
-    </nav>
-
-    <a class="ym-login" href="login.html">Đăng nhập</a>
-  </div>
-
-<section class="ym-hero" 
-    style="--hero-bg: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgn-UbWZbTBLj-uQg70Lk9T7_2sHWzDv83HxoUqOZXn15vtd-uaXL3XgvCeoLH62-V2dO1xE04jHJme3SVPDn9LKDh54sExtvpxrAvRBhisccHFHfSGWCeN2rl3jrVU0uwqyOdOu-DQfVYuoW9eakoWapz84UGW2XmNxBzqZQnRUDvGL1OBrnUNbVDOimQ/s800-rw/(%20Anhpng.com%20)%20-%20B%C3%81C%20S%C4%A8%20-%20B%E1%BB%86NH%20VI%E1%BB%86N%20-%20TH%E1%BA%A6Y%20THU%E1%BB%90C%20(70).jpg');">    <div class="container ym-heroInner">
-      <div class="ym-heroLeft">
-        <h1 class="ym-title">Telehealth Platform – Đồng hành cùng sức khỏe của bạn</h1>
-        <p class="ym-sub">
-          Ứng dụng công nghệ giúp bạn kết nối bác sĩ nhanh chóng và quản lý sức khỏe hiệu quả.
-        </p>
-
-        <form class="ym-search" role="search">
-          <input
-            class="ym-searchInput"
-            type="search"
-            placeholder="Triệu chứng, bác sĩ, bệnh viện..."
-            aria-label="Tìm kiếm"
-          />
-          <button class="ym-searchBtn" type="submit" aria-label="Tìm kiếm">
-            🔍
-          </button>
-        </form>
-      </div>
+      <nav class="ym-nav" aria-label="Điều hướng">
+        <a class="ym-navLink" data-page="home" href="home.html"><i data-lucide="home"></i> Trang Chủ</a>
+        <div class="ym-navLink ym-dropdown">
+          <i data-lucide="layout-grid"></i> Chức Năng <span class="arrow">▼</span>
+          <ul class="dropdown-menu">
+            <li><a href="function/book.html"><i data-lucide="calendar-plus"></i> Đặt khám</a></li>
+            <li><a href="function/appointment.html"><i data-lucide="calendar-check"></i> Lịch sử đặt khám</a></li>
+            <li><a href="function/pay.html"><i data-lucide="credit-card"></i> Thanh toán viện phí</a></li>
+            <li><a href="function/invoice.html"><i data-lucide="file-text"></i> Hóa đơn</a></li>
+            <li><a href="function/profile.html"><i data-lucide="clipboard-list"></i> Hồ sơ sức khỏe</a></li>
+            <li><a href="function/monitoring.html"><i data-lucide="activity"></i> Theo dõi tại nhà</a></li>
+          </ul>
+        </div>
+        <a class="ym-navLink" data-page="notifications" href="notifications.html"><i data-lucide="bell"></i> Thông Báo</a>
+      </nav>
 
     </div>
   </section>

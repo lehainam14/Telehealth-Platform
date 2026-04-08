@@ -19,7 +19,7 @@ function initTopNavActive() {
   const pageFromFile = (() => {
     if (file === "notifications.html") return "notifications";
     if (file === "home.html") return "home";
-    return "";
+    return null;
   })();
 
   links.forEach(a => {
@@ -241,7 +241,181 @@ function initFeaturedSliderAuto() {
   goTo(0, true);
 }
 
+const AUTH_KEYS = {
+  users: "telehealth_users",
+  currentUser: "telehealth_current_user"
+};
+
+const DEMO_USER = {
+  fullName: "Bệnh nhân mẫu",
+  email: "patient@telehealth.vn",
+  password: "123456",
+  phone: "Chưa cập nhật",
+  birthDate: "Chưa cập nhật"
+};
+
+function loadUsers() {
+  try {
+    const raw = localStorage.getItem(AUTH_KEYS.users);
+    const users = raw ? JSON.parse(raw) : [];
+    if (Array.isArray(users)) return users;
+  } catch (error) {
+    console.warn("Không thể đọc danh sách user:", error);
+  }
+  return [];
+}
+
+function saveUsers(users) {
+  localStorage.setItem(AUTH_KEYS.users, JSON.stringify(users));
+}
+
+function getCurrentUser() {
+  try {
+    const raw = localStorage.getItem(AUTH_KEYS.currentUser);
+    return raw ? JSON.parse(raw) : null;
+  } catch (error) {
+    console.warn("Không thể đọc current user:", error);
+    return null;
+  }
+}
+
+function setCurrentUser(user) {
+  localStorage.setItem(AUTH_KEYS.currentUser, JSON.stringify(user));
+}
+
+function clearCurrentUser() {
+  localStorage.removeItem(AUTH_KEYS.currentUser);
+}
+
+function syncHeaderAuthLink() {
+  const loginLink = document.querySelector(".ym-login");
+  if (!loginLink) return;
+
+  const currentUser = getCurrentUser();
+  if (currentUser) {
+    loginLink.setAttribute("href", "profile.html");
+    loginLink.innerHTML = '<i data-lucide="user"></i> Hồ sơ';
+  } else {
+    loginLink.setAttribute("href", "login.html");
+    loginLink.innerHTML = '<i data-lucide="log-in"></i> Đăng nhập';
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === "function") {
+    window.lucide.createIcons();
+  }
+}
+
+function normalizeEmail(email) {
+  return (email || "").trim().toLowerCase();
+}
+
+function showAuthMessage(el, message) {
+  if (!el) return;
+  if (message) {
+    el.textContent = message;
+    el.classList.remove("hidden");
+  } else {
+    el.textContent = "";
+    el.classList.add("hidden");
+  }
+}
+
+function initLoginPage() {
+  const loginForm = document.getElementById("login-form");
+  if (!loginForm) return;
+
+  const errEl = document.getElementById("login-error");
+
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    showAuthMessage(errEl, "");
+
+    const formData = new FormData(loginForm);
+    const email = normalizeEmail(formData.get("email"));
+    const password = String(formData.get("password") || "");
+
+    if (!email || !password) {
+      showAuthMessage(errEl, "Vui lòng nhập đầy đủ email và mật khẩu.");
+      return;
+    }
+
+    const users = loadUsers();
+    const found = users.find(u => normalizeEmail(u.email) === email && u.password === password);
+    const isDemo = email === DEMO_USER.email && password === DEMO_USER.password;
+
+    if (!found && !isDemo) {
+      showAuthMessage(errEl, "Email hoặc mật khẩu không đúng.");
+      return;
+    }
+
+    setCurrentUser(found || DEMO_USER);
+    syncHeaderAuthLink();
+    window.location.href = "profile.html";
+  });
+}
+
+function initRegisterPage() {
+  const registerForm = document.getElementById("register-form");
+  if (!registerForm) return;
+
+  const errEl = document.getElementById("register-error");
+  const successEl = document.getElementById("register-success");
+
+  registerForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    showAuthMessage(errEl, "");
+    showAuthMessage(successEl, "");
+
+    const formData = new FormData(registerForm);
+    const fullName = String(formData.get("fullName") || "").trim();
+    const email = normalizeEmail(formData.get("email"));
+    const phone = String(formData.get("phone") || "").trim();
+    const birthDate = String(formData.get("birthDate") || "").trim();
+    const password = String(formData.get("password") || "");
+    const confirmPassword = String(formData.get("confirmPassword") || "");
+
+    if (!fullName || !email || !phone || !birthDate || !password || !confirmPassword) {
+      showAuthMessage(errEl, "Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+
+    if (password.length < 6) {
+      showAuthMessage(errEl, "Mật khẩu phải có ít nhất 6 ký tự.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      showAuthMessage(errEl, "Mật khẩu xác nhận không khớp.");
+      return;
+    }
+
+    const users = loadUsers();
+    const alreadyExists = users.some(u => normalizeEmail(u.email) === email) || email === DEMO_USER.email;
+    if (alreadyExists) {
+      showAuthMessage(errEl, "Email này đã được sử dụng.");
+      return;
+    }
+
+    const newUser = { fullName, email, phone, birthDate, password };
+    users.push(newUser);
+    saveUsers(users);
+    setCurrentUser(newUser);
+    syncHeaderAuthLink();
+    showAuthMessage(successEl, "Đăng ký thành công! Đang chuyển đến hồ sơ...");
+
+    window.setTimeout(() => {
+      window.location.href = "profile.html";
+    }, 700);
+  });
+}
+
+// DOMContentLoaded - Khởi tạo tất cả
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM loaded - Khởi tạo các thành phần");
+  syncHeaderAuthLink();
+  initLoginPage();
+  initRegisterPage();
+  initProfilePage();
   initTopNavActive();
   syncHeaderAuthLink();
   initLoginPage();

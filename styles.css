@@ -676,6 +676,12 @@ body{
   padding: 24px 0 42px;
 }
 
+.auth-main{
+  min-height: calc(100vh - 84px);
+  display: grid;
+  place-items: center;
+}
+
 .auth-card,
 .profile-card{
   background: #fff;
@@ -686,7 +692,7 @@ body{
 
 .auth-card{
   width: min(420px, 100%);
-  margin: 10px auto 0;
+  margin: 0 auto;
   padding: 20px;
 }
 
@@ -703,6 +709,16 @@ body{
   font-weight: 800;
 }
 
+.auth-grid-2{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.auth-grid-2 > *{
+  min-width: 0;
+}
+
 .auth-group{
   display: grid;
   gap: 6px;
@@ -715,7 +731,44 @@ body{
   font-weight: 900;
 }
 
+.auth-switch{
+  margin-top: 14px;
+  text-align: center;
+  color: #475569;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.auth-switch a{
+  color: #2d63dc;
+  text-decoration: none;
+}
+
+.auth-switch a:hover{
+  text-decoration: underline;
+}
+
+.auth-success{
+  margin-bottom: 12px;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: rgba(22, 163, 74, 0.1);
+  border: 1px solid rgba(22, 163, 74, 0.25);
+  color: #166534;
+  font-weight: 900;
+  font-size: 13px;
+}
+
+@media (max-width: 640px){
+  .auth-grid-2{
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
 .auth-input{
+  width: 100%;
+  min-width: 0;
   border: 1px solid rgba(37, 99, 235, 0.2);
   border-radius: 12px;
   padding: 12px 13px;

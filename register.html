@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng ký - Telehealth Platform</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body class="auth-page">
+  <header class="ym-header">
+    <div class="ym-top">
+      <a class="ym-brand" href="home.html" aria-label="Trang chủ">
+        <img src="images/logo.png" alt="UMC Care" />
+        Telehealth Platform
+      </a>
+
+      <nav class="ym-nav" aria-label="Điều hướng">
+        <a class="ym-navLink" data-page="home" href="home.html"><i data-lucide="home"></i> Trang Chủ</a>
+        <div class="ym-navLink ym-dropdown">
+          <i data-lucide="layout-grid"></i> Chức Năng <span class="arrow">▼</span>
+          <ul class="dropdown-menu">
+            <li><a href="function/book.html"><i data-lucide="calendar-plus"></i> Đặt khám</a></li>
+            <li><a href="function/appointment.html"><i data-lucide="calendar-check"></i> Lịch sử đặt khám</a></li>
+            <li><a href="function/pay.html"><i data-lucide="credit-card"></i> Thanh toán viện phí</a></li>
+            <li><a href="function/invoice.html"><i data-lucide="file-text"></i> Hóa đơn</a></li>
+            <li><a href="function/profile.html"><i data-lucide="clipboard-list"></i> Hồ sơ sức khỏe</a></li>
+            <li><a href="function/monitoring.html"><i data-lucide="activity"></i> Theo dõi tại nhà</a></li>
+          </ul>
+        </div>
+        <a class="ym-navLink" data-page="notifications" href="notifications.html"><i data-lucide="bell"></i> Thông Báo</a>
+      </nav>
+
+      <a class="ym-login" href="login.html"><i data-lucide="log-in"></i> Đăng nhập</a>
+    </div>
+  </header>
+
+  <main class="container auth-main">
+    <section class="auth-card" aria-label="Biểu mẫu đăng ký">
+      <h1 class="auth-title">Đăng ký tài khoản</h1>
+      <p class="auth-sub">Tạo tài khoản để quản lý lịch khám và hồ sơ sức khỏe.</p>
+
+      <div id="register-error" class="auth-error hidden" role="alert"></div>
+      <div id="register-success" class="auth-success hidden" role="status"></div>
+
+      <form id="register-form">
+        <div class="auth-group">
+          <label class="auth-label" for="fullName">Họ và tên</label>
+          <input class="auth-input" id="fullName" name="fullName" type="text" placeholder="Nguyễn Văn A" required />
+        </div>
+
+        <div class="auth-group">
+          <label class="auth-label" for="email">Email</label>
+          <input class="auth-input" id="email" name="email" type="email" placeholder="patient@telehealth.vn" required />
+        </div>
+
+        <div class="auth-group auth-grid-2">
+          <div>
+            <label class="auth-label" for="phone">Số điện thoại</label>
+            <input class="auth-input" id="phone" name="phone" type="tel" placeholder="09xxxxxxxx" required />
+          </div>
+          <div>
+            <label class="auth-label" for="birthDate">Ngày sinh</label>
+            <input class="auth-input" id="birthDate" name="birthDate" type="date" required />
+          </div>
+        </div>
+
+        <div class="auth-group auth-grid-2">
+          <div>
+            <label class="auth-label" for="password">Mật khẩu</label>
+            <input class="auth-input" id="password" name="password" type="password" placeholder="Tối thiểu 6 ký tự" required />
+          </div>
+          <div>
+            <label class="auth-label" for="confirmPassword">Xác nhận mật khẩu</label>
+            <input class="auth-input" id="confirmPassword" name="confirmPassword" type="password" placeholder="Nhập lại mật khẩu" required />
+          </div>
+        </div>
+
+        <button class="auth-submit" type="submit">Tạo tài khoản</button>
+      </form>
+
+      <p class="auth-switch">Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
+
