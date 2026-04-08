@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Đăng nhập - Telehealth Platform</title>
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body class="auth-page">
   <header class="ym-header">
-    <div class="ym-top container">
+    <div class="ym-top">
       <a class="ym-brand" href="home.html" aria-label="Trang chủ">
         <img src="images/logo.png" alt="UMC Care" />
         Telehealth Platform
@@ -30,7 +31,7 @@
         <a class="ym-navLink" data-page="notifications" href="notifications.html"><i data-lucide="bell"></i> Thông Báo</a>
       </nav>
 
-      <a class="ym-login" href="login.html">Đăng nhập</a>
+      <a class="ym-login" href="login.html"><i data-lucide="log-in"></i> Đăng nhập</a>
     </div>
   </header>
 
@@ -62,6 +63,7 @@
   </main>
 
   <script src="app.js"></script>
+  <script>lucide.createIcons();</script>
 </body>
 </html>
 

@@ -14,7 +14,7 @@ function initTopNavActive() {
   if (!links.length) return;
 
   const path = window.location.pathname || "";
-  const file = path.split("/").pop(); // e.g. "index.html"
+  const file = path.split("/").pop();
 
   const pageFromFile = (() => {
     if (file === "notifications.html") return "notifications";
@@ -23,110 +23,22 @@ function initTopNavActive() {
   })();
 
   links.forEach(a => {
-    const active = pageFromFile && a.dataset.page === pageFromFile;
+    const active = a.dataset.page === pageFromFile;
     a.classList.toggle("active", active);
     a.setAttribute("aria-current", active ? "page" : "false");
   });
-}
 
-const AUTH_STORAGE_KEY = "telehealth_current_user";
-
-function getCurrentUser() {
-  try {
-    const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch (err) {
-    return null;
-  }
-}
-
-function setCurrentUser(user) {
-  window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
-}
-
-function clearCurrentUser() {
-  window.localStorage.removeItem(AUTH_STORAGE_KEY);
-}
-
-function syncHeaderAuthLink() {
-  const authLink = document.querySelector(".ym-login");
-  if (!authLink) return;
-
-  const user = getCurrentUser();
-  if (user) {
-    authLink.textContent = "Hồ sơ";
-    authLink.href = "profile.html";
-    return;
-  }
-
-  authLink.textContent = "Đăng nhập";
-  authLink.href = "login.html";
-}
-
-function initLoginPage() {
-  const form = document.getElementById("login-form");
-  if (!form) return;
-
-  const user = getCurrentUser();
-  if (user) {
-    window.location.href = "profile.html";
-    return;
-  }
-
-  const errorEl = document.getElementById("login-error");
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const email = document.getElementById("email")?.value?.trim() || "";
-    const password = document.getElementById("password")?.value || "";
-
-    if (email !== "patient@telehealth.vn" || password !== "123456") {
-      if (errorEl) {
-        errorEl.textContent = "Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.";
-        errorEl.classList.remove("hidden");
+  const dropdownLinks = document.querySelectorAll(".dropdown-menu li a");
+  dropdownLinks.forEach(a => {
+    const href = a.getAttribute("href") || "";
+    if (href && (file === href.split("/").pop())) {
+      const parentDropdown = a.closest(".ym-dropdown");
+      if (parentDropdown) {
+        parentDropdown.style.background = "rgba(31,120,255,0.14)";
+        parentDropdown.style.color = "rgba(11,58,120,0.95)";
+        parentDropdown.style.borderRadius = "999px";
       }
-      return;
     }
-
-    const currentUser = {
-      fullName: "Nguyễn Minh Anh",
-      email: "patient@telehealth.vn",
-      phone: "0912 345 678",
-      birthDate: "12/07/2001"
-    };
-
-    setCurrentUser(currentUser);
-    syncHeaderAuthLink();
-    window.location.href = "profile.html";
-  });
-}
-
-function initProfilePage() {
-  const profileRoot = document.getElementById("profile-root");
-  if (!profileRoot) return;
-
-  const user = getCurrentUser();
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  const nameEl = document.getElementById("pf-name");
-  const emailEl = document.getElementById("pf-email");
-  const phoneEl = document.getElementById("pf-phone");
-  const birthEl = document.getElementById("pf-birth");
-  const logoutBtn = document.getElementById("btn-logout");
-
-  if (nameEl) nameEl.textContent = user.fullName || "Chưa cập nhật";
-  if (emailEl) emailEl.textContent = user.email || "Chưa cập nhật";
-  if (phoneEl) phoneEl.textContent = user.phone || "Chưa cập nhật";
-  if (birthEl) birthEl.textContent = user.birthDate || "Chưa cập nhật";
-
-  logoutBtn?.addEventListener("click", () => {
-    clearCurrentUser();
-    syncHeaderAuthLink();
-    window.location.href = "login.html";
   });
 }
 
@@ -138,7 +50,7 @@ function initNotificationsPage() {
 
   if (!segBtns.length || !notifList || !notifEmpty) return;
 
-  const state = { unreadCount: 2 }; // chỉnh để test
+  const state = { unreadCount: 2 };
 
   function render(filter) {
     const hasItems = state.unreadCount > 0 || filter === "all";
@@ -160,8 +72,8 @@ function initNotificationsPage() {
       }
     } else {
       items.push(
-        { unread: true, title: "Xác nhận bảo hiểm y tế", sub: "Nhắc bạn hoàn tất thông tin trước khi khám" },
-        { unread: false, title: "Chương trình sinh hoạt", sub: "Bạn có thể đăng ký tham gia theo lịch" }
+        { unread: true,  title: "Xác nhận bảo hiểm y tế", sub: "Nhắc bạn hoàn tất thông tin trước khi khám" },
+        { unread: false, title: "Chương trình sinh hoạt",  sub: "Bạn có thể đăng ký tham gia theo lịch" }
       );
     }
 
@@ -192,53 +104,238 @@ function initNotificationsPage() {
     render(activeSeg?.dataset?.filter || "all");
   });
 
-  // initial
   const activeSeg = document.querySelector(".seg-btn.active");
   render(activeSeg?.dataset?.filter || "all");
 }
 
-function initFeaturedSliderAuto() {
-  const track = document.getElementById("featured-track");
-  const dotsContainer = document.getElementById("featured-dots");
-  if (!track || !dotsContainer) return;
+function initProfilePage() {
+  const profileRoot = document.getElementById("profile-root");
+  if (!profileRoot) return;
 
-  const slides = Array.from(track.children);
-  const total = slides.length;
-  if (total <= 1) return; // chỉ 1 slide thì khỏi chạy
-
-  let index = 0;
-  let timerId = null;
-  const AUTO_DELAY = 4000; // 4 giây chuyển 1 lần
-
-  // tạo dots theo số slide
-  dotsContainer.innerHTML = slides
-    .map((_, i) => `<span class="featured-dot ${i === 0 ? "active" : ""}"></span>`)
-    .join("");
-  const dots = Array.from(dotsContainer.children);
-
-  function goTo(i, restartTimer = true) {
-    index = (i + total) % total; // vòng tròn
-    track.style.transform = `translateX(-${index * 100}%)`;
-
-    dots.forEach((d, idx) => d.classList.toggle("active", idx === index));
-
-    if (restartTimer) startTimer();
+  const user = getCurrentUser();
+  if (!user) {
+    window.location.href = "login.html";
+    return;
   }
 
-  function startTimer() {
-    if (timerId) clearInterval(timerId);
-    timerId = setInterval(() => {
-      goTo(index + 1, false); // tự động sang slide kế tiếp
-    }, AUTO_DELAY);
-  }
+  const nameEl = document.getElementById("pf-name");
+  const emailEl = document.getElementById("pf-email");
+  const phoneEl = document.getElementById("pf-phone");
+  const birthEl = document.getElementById("pf-birth");
+  const logoutBtn = document.getElementById("btn-logout");
 
-  // cho phép click dot để nhảy thẳng tới slide
-  dots.forEach((dot, i) => {
-    dot.addEventListener("click", () => goTo(i, true));
+  if (nameEl) nameEl.textContent = user.fullName || "Chưa cập nhật";
+  if (emailEl) emailEl.textContent = user.email || "Chưa cập nhật";
+  if (phoneEl) phoneEl.textContent = user.phone || "Chưa cập nhật";
+  if (birthEl) birthEl.textContent = user.birthDate || "Chưa cập nhật";
+
+  logoutBtn?.addEventListener("click", () => {
+    clearCurrentUser();
+    syncHeaderAuthLink();
+    window.location.href = "login.html";
   });
+}
 
-  // khởi động
-  goTo(0, true);
+// ===== NÚT ĐẶT LỊCH KHÁM =====
+function initBookingButtons() {
+  const bookButtons = document.querySelectorAll('.btn-book-home');
+  bookButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const doctor = btn.getAttribute('data-doctor') || 'Bác sĩ';
+      const specialty = btn.getAttribute('data-specialty') || '';
+      const hospital = btn.getAttribute('data-hospital') || '';
+      
+      showToast(`Đã chọn: ${doctor} - ${specialty}. Vui lòng đăng nhập để đặt lịch.`);
+    });
+  });
+}
+
+// ===== SLIDER CHO TIN TỨC - CHỈ CHẠY TRÊN DESKTOP =====
+function initNewsSlider() {
+  const newsViewport = document.querySelector('.news-slider-viewport');
+  const newsGrid = document.querySelector('.news-grid');
+  const newsDots = document.getElementById('news-dots');
+  
+  if (!newsGrid || !newsDots || !newsViewport) return;
+  
+  const newsItems = Array.from(document.querySelectorAll('.news-card'));
+  if (newsItems.length === 0) return;
+  
+  function isDesktop() {
+    return window.innerWidth >= 861;
+  }
+  
+  if (!isDesktop()) return;
+  
+  const itemsPerPage = 2;
+  const totalPages = Math.ceil(newsItems.length / itemsPerPage);
+  let currentPage = 0;
+  let autoInterval;
+  const AUTO_DELAY = 4000;
+  
+  // Tính khoảng cách cần trượt = chiều rộng viewport (hiển thị đúng 2 card)
+  function getScrollDistance() {
+    return newsViewport.offsetWidth + 24; // width + gap
+  }
+  
+  // Tạo dots
+  function createDots() {
+    newsDots.innerHTML = '';
+    newsDots.style.display = 'flex';
+    for (let i = 0; i < totalPages; i++) {
+      const dot = document.createElement('span');
+      dot.className = 'news-dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', (function(idx) {
+        return function() { goToPage(idx); };
+      })(i));
+      newsDots.appendChild(dot);
+    }
+  }
+  
+  function updateDots() {
+    document.querySelectorAll('.news-dot').forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === currentPage);
+    });
+  }
+  
+  function showPage(page) {
+    currentPage = Math.min(Math.max(0, page), totalPages - 1);
+    const offset = currentPage * getScrollDistance();
+    newsGrid.style.transform = `translateX(-${offset}px)`;
+    updateDots();
+  }
+  
+  function goToPage(page) {
+    showPage(page);
+    resetAutoPlay();
+  }
+  
+  function nextPage() {
+    showPage(currentPage + 1 >= totalPages ? 0 : currentPage + 1);
+  }
+  
+  function resetAutoPlay() {
+    clearInterval(autoInterval);
+    autoInterval = setInterval(nextPage, AUTO_DELAY);
+  }
+  
+  function stopAutoPlay() {
+    clearInterval(autoInterval);
+  }
+  
+  const newsSection = document.querySelector('.news-section');
+  if (newsSection) {
+    newsSection.addEventListener('mouseenter', stopAutoPlay);
+    newsSection.addEventListener('mouseleave', resetAutoPlay);
+  }
+  
+  createDots();
+  setTimeout(() => {
+    showPage(0);
+    resetAutoPlay();
+  }, 100);
+  
+  // Recalculate on resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (isDesktop()) {
+        newsGrid.style.transition = 'none';
+        showPage(currentPage);
+        setTimeout(() => { newsGrid.style.transition = 'transform 0.5s ease'; }, 50);
+      }
+    }, 100);
+  });
+}
+
+// ===== TESTIMONIALS - CHẠY NGANG TỰ ĐỘNG =====
+function initTestimonialsSlider() {
+  const track = document.getElementById('testimonialsTrack');
+  if (!track) return;
+  
+  const allCards = document.querySelectorAll('.testimonial-card');
+  const originalCount = Math.ceil(allCards.length / 2);
+  
+  if (originalCount <= 1) return;
+  
+  let currentIndex = 0;
+  let autoScrollInterval;
+  const AUTO_DELAY = 5000;
+  
+  function getCardWidth() {
+    const card = document.querySelector('.testimonial-card');
+    if (!card) return 364;
+    const width = card.offsetWidth;
+    const gap = 24;
+    return width + gap;
+  }
+  
+  function goToSlide(index) {
+    if (index < 0) index = 0;
+    if (index >= originalCount) index = originalCount - 1;
+    currentIndex = index;
+    
+    const cardWidth = getCardWidth();
+    track.style.transition = 'transform 0.5s ease';
+    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+  }
+  
+  function nextSlide() {
+    if (currentIndex >= originalCount - 1) {
+      currentIndex = -1;
+      goToSlide(currentIndex + 1);
+    } else {
+      goToSlide(currentIndex + 1);
+    }
+  }
+  
+  function startAutoScroll() {
+    if (autoScrollInterval) clearInterval(autoScrollInterval);
+    autoScrollInterval = setInterval(nextSlide, AUTO_DELAY);
+  }
+  
+  function stopAutoScroll() {
+    if (autoScrollInterval) clearInterval(autoScrollInterval);
+  }
+  
+  const wrapper = document.querySelector('.testimonials-wrapper');
+  if (wrapper) {
+    wrapper.addEventListener('mouseenter', stopAutoScroll);
+    wrapper.addEventListener('mouseleave', startAutoScroll);
+  }
+  
+  startAutoScroll();
+  
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      track.style.transition = 'none';
+      track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
+      setTimeout(() => {
+        track.style.transition = 'transform 0.5s ease';
+      }, 50);
+    }, 100);
+  });
+}
+
+// ===== TÌM KIẾM =====
+function initSearch() {
+  const searchForm = document.querySelector('.ym-search');
+  const searchInput = document.querySelector('.ym-searchInput');
+  
+  if (searchForm) {
+    searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const keyword = searchInput?.value.trim();
+      if (keyword) {
+        showToast(`Đang tìm kiếm: "${keyword}"`);
+      } else {
+        showToast('Vui lòng nhập từ khóa tìm kiếm');
+      }
+    });
+  }
 }
 
 const AUTH_KEYS = {
@@ -417,9 +514,9 @@ document.addEventListener("DOMContentLoaded", () => {
   initRegisterPage();
   initProfilePage();
   initTopNavActive();
-  syncHeaderAuthLink();
-  initLoginPage();
-  initProfilePage();
   initNotificationsPage();
-  initFeaturedSliderAuto(); // gọi slider tự động
+  initNewsSlider();
+  initTestimonialsSlider();
+  initBookingButtons();
+  initSearch();
 });
